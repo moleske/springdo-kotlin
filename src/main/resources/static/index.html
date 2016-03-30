@@ -20,6 +20,12 @@
                 <div class="list-group-item">
                     <dt>{{item.title}} ({{item.id}})</dt>
                     <dd>{{item.content}}</dd>
+                    <form name="form{{item.id}}">
+                        <label>Done
+                            <input type="checkbox" ng-model="item.done"
+                                   ng-true-value="'yes'" ng-false-value="'no'"
+                                   ng-click='onDoneClick(item)'>
+                        </label></form>
                 </div>
             </div>
         </dl>
