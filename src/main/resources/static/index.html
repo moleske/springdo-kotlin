@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+    <title>SpringDo</title>
+    <link href="css/angular-bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+        [ng\:cloak], [ng-cloak], .ng-cloak {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body ng-app="index">
+<div class="container">
+    <h1>My TODO list</h1>
+
+    <div ng-controller="home" ng-cloak class="ng-cloak">
+        <dl class="list-group">
+            <div ng-repeat="item in listofitems">
+                <div class="list-group-item">
+                    <dt>{{item.title}} ({{item.id}})</dt>
+                    <dd>{{item.content}}</dd>
+                </div>
+            </div>
+        </dl>
+    </div>
+
+</div>
+<script src="js/angular-bootstrap.js" type="text/javascript"></script>
+<script src="js/index.js"></script>
+<!--  you can comment out the js/index.js include above and run with a built-in controller like so:
+  <script>
+    angular.module('index', []).controller('home', function ($scope, $http) {
+        $scope.listofitems = [
+            {id: '1', title: 'hi', content: 'Hello World!'}, {
+             id: '2', title: 'bye', content: 'Bye!',
+        }];
+    });
+</script>
+-->
+</body>
+</html>
