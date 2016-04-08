@@ -3,11 +3,7 @@
 <head>
     <title>SpringDo</title>
     <link href="css/angular-bootstrap.css" rel="stylesheet">
-    <style type="text/css">
-        [ng\:cloak], [ng-cloak], .ng-cloak {
-            display: none !important;
-        }
-    </style>
+    <link href="css/local.css" rel="stylesheet">
 </head>
 
 <body ng-app="index">
@@ -15,20 +11,39 @@
     <h1>My TODO list</h1>
 
     <div ng-controller="home" ng-cloak class="ng-cloak">
-        <dl class="list-group">
+        <div class="list-group">
             <div ng-repeat="item in listofitems">
-                <div class="list-group-item">
-                    <dt>{{item.title}} ({{item.id}})</dt>
-                    <dd>{{item.content}}</dd>
-                    <form name="form{{item.id}}">
-                        <label>Done
+                <div class="list-group-item row">
+                    <!-- not editing: -->
+                    <form name="form{{item.id}}" ng-show="!content[item.id] || (content[item.id] && !editorEnabled)">
+                        <div class="col-md-6">
+                            <div ng-click="toggleContent(item.id)"><b>{{item.title}}</b></div>
+                            <div ng-show="content[item.id] && !editorEnabled">
+                                <p>{{item.content}}</p>
+                                <span class="glyphicon glyphicon-pencil" ng-click="goedit(item)"></span>
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">Done
                             <input type="checkbox" ng-model="item.done"
                                    ng-true-value="'yes'" ng-false-value="'no'"
                                    ng-click='onDoneClick(item)'>
-                        </label></form>
+                        </div>
+                    </form>
+                    <!-- editing: -->
+                    <div ng-show="content[item.id] && editorEnabled">
+                        <form name="formedit{{item.id}}"  ng-submit="saveedit(item)" role="form">
+                            <div class="form-group">
+                                <input type="text" ng-model="item.titleField" class="form-control"><br>
+                                <textarea type="text" ng-model="item.contentField"  class="form-control"></textarea><br>
+                                <input type="submit" id="submit" value="Submit"   class="form-control btn btn-warning">
+                            </div>
+                        </form>
+                    </div>
+
                 </div>
             </div>
-        </dl>
+        </div>
     </div>
 
 </div>

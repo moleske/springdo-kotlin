@@ -3,6 +3,7 @@ package io.pivotal
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.hasSize
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -59,5 +60,20 @@ class ListOfItemsControllerTest {
         val newItem = itemRepository.findOne(item.id)
         assertEquals(item.done, "no")
         assertEquals(newItem.done, "yes")
+    }
+
+    @Test
+    fun whenEditIsMadeTheModelIsUpdated() {
+        val newTitle = "New Test Title"
+        val item = Item("Test Todo", "Do Lots of stuff")
+        itemRepository.save(item)
+
+        mvc.perform(post(String.format("/resource/save/%d/%s/%s/no/", item.id, newTitle, item.content)))
+                .andExpect(status().isOk)
+
+        assertNotEquals(item.title, newTitle)
+        val newItem = itemRepository.findOne(item.id)
+        assertEquals(newItem.title, newTitle)
+        assertEquals(newItem.content, item.content)
     }
 }
