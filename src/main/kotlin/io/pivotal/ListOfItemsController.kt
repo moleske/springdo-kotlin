@@ -48,4 +48,13 @@ class ListOfItemsController @Autowired constructor(val itemRepository: ItemRepos
         itemRepository.save(item)
         return "[\"ok\"]"
     }
+
+    @RequestMapping(value = "/resource/create/", method = arrayOf(RequestMethod.GET))
+    fun postSaveUpdate() = itemRepository.save(Item())
+
+    @RequestMapping(value = "/resource/delete/{id}")
+    fun deleteItem(@PathVariable id: Long): String {
+        itemRepository.delete(id)
+        return "[\"ok\"]"
+    }
 }

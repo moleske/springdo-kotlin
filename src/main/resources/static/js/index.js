@@ -40,6 +40,26 @@ angular.module('index', []).controller('home', function($scope, $http) {
 
     };
 
+    $scope.plusbutton = function () {
+        $http.get('resource/create/').then(function(success) {
+            newitem = success.data;
+            $scope.listofitems.push(newitem);
+            $scope.toggleContent(newitem.id);
+            $scope.goedit(newitem);
+        });
+    };
 
-
+    $scope.godelete = function (item) {
+        $http.post('/resource/delete/' + item.id + '/').then(
+            function (success) {
+                // in the future we should get an update from the server, now we just
+                // remove the item ourselves
+                listofitems = $scope.listofitems;
+                for (i = listofitems.length - 1; i >= 0; i--) {
+                    if (listofitems[i].id == item.id) {
+                        listofitems.splice(i, 1);
+                    }
+                }
+            });
+    };
 });

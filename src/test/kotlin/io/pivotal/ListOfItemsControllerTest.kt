@@ -1,9 +1,7 @@
 package io.pivotal
 
-import org.hamcrest.Matchers.equalTo
-import org.hamcrest.Matchers.hasSize
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
+import org.hamcrest.Matchers.*
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -75,5 +73,27 @@ class ListOfItemsControllerTest {
         val newItem = itemRepository.findOne(item.id)
         assertEquals(newItem.title, newTitle)
         assertEquals(newItem.content, item.content)
+    }
+
+    @Test
+    fun whenCreateIsHitANewItemIsCreatedAndReturned() {
+        mvc.perform(get("/resource/create/"))
+                .andExpect(status().isOk)
+                .andDo(print())
+                .andExpect(jsonPath("$.title", isEmptyString()))
+                .andExpect(jsonPath("$.content", isEmptyString()))
+                .andExpect(jsonPath("$.done", equalTo("no")))
+    }
+
+    @Test
+    fun whenDeleteIsHitItemIsTrashed() {
+        val item = Item("Test Todo", "Do Lots of stuff - then delete")
+        itemRepository.save(item)
+
+        mvc.perform(post(String.format("/resource/delete/%d/", item.id)))
+                .andExpect(status().isOk)
+
+        val newItem = itemRepository.findOne(item.id)  // returns Null if not found
+        assertNull(newItem)
     }
 }
