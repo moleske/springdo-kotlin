@@ -6,6 +6,17 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.web.csrf.CsrfFilter
+import org.springframework.security.web.csrf.CsrfToken
+import org.springframework.security.web.csrf.CsrfTokenRepository
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository
+import org.springframework.web.filter.OncePerRequestFilter
+import org.springframework.web.util.WebUtils
+import javax.servlet.Filter
+import javax.servlet.FilterChain
+import javax.servlet.http.Cookie
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 @Configuration
 @EnableWebSecurity
@@ -24,7 +35,10 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 .and()
                 .logout().permitAll()
                 .and()
-                .csrf().disable()
+                .csrf()
+                .csrfTokenRepository(csrfTokenRepository())
+                .and()
+                .addFilterAfter(csrfHeaderFilter(), CsrfFilter::class.java)
     }
 
     override fun configure(auth: AuthenticationManagerBuilder) {
@@ -34,5 +48,30 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     @Bean
     open fun myUserManager(): UserManager {
         return UserManager()
+    }
+
+    private fun csrfHeaderFilter(): Filter {
+        return object : OncePerRequestFilter() {
+
+            override fun doFilterInternal(httpServletRequest: HttpServletRequest, httpServletResponse: HttpServletResponse, filterChain: FilterChain) {
+                val csrfToken: CsrfToken? = httpServletRequest.getAttribute(CsrfToken::class.java.name) as CsrfToken
+                if (csrfToken != null) {
+                    var cookie: Cookie? = WebUtils.getCookie(httpServletRequest, "XSRF-TOKEN")
+                    val token = csrfToken.token
+                    if (cookie == null || token != null && token != cookie.value) {
+                        cookie = Cookie("XSRF-TOKEN", token)
+                        cookie.path = "/"  //probably don't want that normally
+                        httpServletResponse.addCookie(cookie)
+                    }
+                }
+                filterChain.doFilter(httpServletRequest, httpServletResponse)
+            }
+        }
+    }
+
+    private fun csrfTokenRepository(): CsrfTokenRepository {
+        val repository = HttpSessionCsrfTokenRepository()
+        repository.setHeaderName("X-XSRF-TOKEN")
+        return repository
     }
 }

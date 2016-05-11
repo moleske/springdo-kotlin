@@ -1,0 +1,5 @@
+---
+applications:
+  - name: springdo-kotlin
+    buildpack: java_buildpack_offline
+    path: build/libs/springdo-kotlin-0.0.1-SNAPSHOT.jar
