@@ -5,6 +5,12 @@ angular.module('index', []).controller('home', function($scope, $http) {
         //$scope.greeting = {id: 'xxx', content: 'Hello World!'};
         $scope.listofitems = data; });
 
+    $scope.springdoUserName = "<Unknown>";
+
+    $http.get("/who/").success(function(data) {
+        $scope.springdoUserName = data["name"];
+    });
+
     $scope.onDoneClick = function (item) {
         $http.post('/resource/done/' + item.id + '/' + item.done + '/')
             .then(function (success) { console.log("backend received done state change", success) },
@@ -41,7 +47,7 @@ angular.module('index', []).controller('home', function($scope, $http) {
     };
 
     $scope.plusbutton = function () {
-        $http.get('resource/create/').then(function(success) {
+        $http.post('resource/create/').then(function(success) {
             newitem = success.data;
             $scope.listofitems.push(newitem);
             $scope.toggleContent(newitem.id);

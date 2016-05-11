@@ -1,25 +1,31 @@
 <!doctype html>
-<html>
+<html ng-app="index">
 <head>
     <title>SpringDo</title>
     <link href="css/angular-bootstrap.css" rel="stylesheet">
     <link href="css/local.css" rel="stylesheet">
+    <base href="/">
 </head>
 
-<body ng-app="index">
+<body>
 <div class="container">
-    <h1>My TODO list</h1>
-
     <div ng-controller="home" ng-cloak class="ng-cloak">
-        <div ng-click="plusbutton()">Plus</div>
+        <h1>TODO list for {{springdoUserName}}</h1>
         <div class="list-group">
             <div ng-repeat="item in listofitems">
                 <div ng-include src="'itemform.html'"></div>
             </div>
         </div>
+        <div type="button" class="btn btn-default btn-lg" aria-label="Add item">
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"  ng-click="plusbutton()"></span>
+        </div>
+        <form action="/logout" method="post">
+            <input type="submit" value="Sign Out"/>
+        </form>
+        <form action="/admin.html" method="get">
+            <input type="submit" value="Admin View"/>
+        </form>
     </div>
-
-
 </div>
 
 <script type="text/ng-template" id="itemform.html">
@@ -53,9 +59,9 @@
                 </div>
             </form>
         </div>
-
     </div>
 </script>
+
 <script src="js/angular-bootstrap.js" type="text/javascript"></script>
 <script src="js/index.js"></script>
 <!--  you can comment out the js/index.js include above and run with a built-in controller like so:
@@ -68,7 +74,6 @@
     });
 </script>
 -->
-
 
 </body>
 </html>

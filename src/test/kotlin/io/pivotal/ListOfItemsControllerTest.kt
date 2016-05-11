@@ -7,6 +7,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.SpringApplicationConfiguration
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
@@ -76,8 +77,9 @@ class ListOfItemsControllerTest {
     }
 
     @Test
+    @WithMockUser("Navya")
     fun whenCreateIsHitANewItemIsCreatedAndReturned() {
-        mvc.perform(get("/resource/create/"))
+        mvc.perform(post("/resource/create/"))
                 .andExpect(status().isOk)
                 .andDo(print())
                 .andExpect(jsonPath("$.title", isEmptyString()))

@@ -1,19 +1,33 @@
 package io.pivotal
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.context.annotation.Bean
 
 @SpringBootApplication
-open class SpringdoKotlinApplication {
-    @Bean
-    open fun init(itemRepository: ItemRepository) = CommandLineRunner {
-        itemRepository.save(Item("swim", "in the pool"))
-        itemRepository.save(Item("run", "around the park"))
-        itemRepository.save(Item("shop", "for new shoes"))
-        itemRepository.save(Item("drive", "to great viewpoint"))
-        itemRepository.save(Item("sleep", "at least 8 hours"))
+open class SpringdoKotlinApplication : CommandLineRunner {
+    @Autowired lateinit var userRepository: UserRepository
+    @Autowired lateinit var itemRepository: ItemRepository
+
+    override fun run(vararg args: String?) {
+        val defaultUser = userRepository.save(
+                User(
+                        username = "Navya",
+                        password = "secret",
+                        email = "n@example.com",
+                        isAdmin = true))
+        val secondUser = userRepository.save(
+                User(
+                        username = "Dirk",
+                        password = "secret",
+                        email = "d@example.com"))
+
+        itemRepository.save(Item("swim", "in the pool", defaultUser))
+        itemRepository.save(Item("run", "around the park", defaultUser))
+        itemRepository.save(Item("shop", "for new shoes", defaultUser))
+        itemRepository.save(Item("drive", "to great viewpoint", secondUser))
+        itemRepository.save(Item("sleep", "at least 8 hours", secondUser))
     }
 }
 

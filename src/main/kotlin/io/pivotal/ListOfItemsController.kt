@@ -1,16 +1,21 @@
 package io.pivotal
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
+import java.security.Principal
 
 @RestController
-class ListOfItemsController @Autowired constructor(val itemRepository: ItemRepository) {
+class ListOfItemsController @Autowired constructor(val itemRepository: ItemRepository, val userRepository: UserRepository) {
 
     @RequestMapping(value = "/resource/list/", method = arrayOf(RequestMethod.GET))
-    fun listOfItems() = itemRepository.findAll()
+    fun listOfItems(principal: Principal): MutableIterable<Item>? {
+        val user = userRepository.findByUsername(principal.name)
+        return itemRepository.findByUser(user)
+    }
 
     @RequestMapping(value = "/resource/dummylist/", method = arrayOf(RequestMethod.GET))
     fun listOfDummyItems() = listOf(
@@ -23,13 +28,13 @@ class ListOfItemsController @Autowired constructor(val itemRepository: ItemRepos
                     "title" to "Visit farmer's market",
                     "content" to "Buy dairy and eggs at farmers market"))
 
-    @RequestMapping(value = "/resource/done/{id}/{state}/", method = arrayOf(RequestMethod.POST))
-    fun postDoneUpdate(@PathVariable id: Long, @PathVariable state: String): String {
+    @RequestMapping(value = "/resource/done/{id}/{done}/", method = arrayOf(RequestMethod.POST))
+    fun postDoneUpdate(@PathVariable id: Long, @PathVariable done: String): String {
         val item = itemRepository.findOne(id)
-        if ( state.equals("yes") or state.equals("no")) {
-            item.done = state
+        if ( done.equals("yes") or done.equals("no")) {
+            item.done = done
         } else {
-            println("Invalid argument to postDoneUpdate:  " + state)
+            println("Invalid argument to postDoneUpdate:  " + done)
         }
         itemRepository.save(item)
         return "[\"ok\"]"
@@ -41,7 +46,7 @@ class ListOfItemsController @Autowired constructor(val itemRepository: ItemRepos
         if ( done.equals("yes") or done.equals("no")) {
             item.done = done
         } else {
-            println("Invalid argument to postDoneUpdate:  " + done)
+            println("Invalid argument to postSaveUpdate:  " + done)
         }
         item.title = title
         item.content = content
@@ -49,12 +54,30 @@ class ListOfItemsController @Autowired constructor(val itemRepository: ItemRepos
         return "[\"ok\"]"
     }
 
-    @RequestMapping(value = "/resource/create/", method = arrayOf(RequestMethod.GET))
-    fun postSaveUpdate() = itemRepository.save(Item())
+    @RequestMapping(value = "/resource/create/", method = arrayOf(RequestMethod.POST))
+    fun postCreate(principal: Principal?): Item? {
+        val principal2 = fixPrincipalForTest(principal)
+        val user = userRepository.findByUsername(principal2.name)
+        if (user != null) {
+            return itemRepository.save(Item(user = user))
+        }
+        return null
+    }
 
     @RequestMapping(value = "/resource/delete/{id}")
     fun deleteItem(@PathVariable id: Long): String {
         itemRepository.delete(id)
         return "[\"ok\"]"
+    }
+
+    private fun fixPrincipalForTest(principal: Principal?): Principal {
+        if (principal == null) {
+            var principal2: Principal? = SecurityContextHolder.getContext().authentication
+            if (principal2 == null) {
+                println("unauthorized or principal is null")
+            }
+            return principal2!!
+        }
+        return principal
     }
 }
