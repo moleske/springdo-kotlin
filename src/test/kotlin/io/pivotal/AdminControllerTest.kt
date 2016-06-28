@@ -75,7 +75,7 @@ class AdminControllerTest {
     @WithMockUser("Navya")
     fun adminShowUser_worksForAdmin() {
         mvc.perform(get("/resource/user/Dirk/"))
-                .andExpect(status().isOk())
+                .andExpect(status().isOk)
                 .andExpect(jsonPath("$.username", equalTo("Dirk")))
                 .andExpect(jsonPath("$.email", equalTo("d@example.com")))
     }

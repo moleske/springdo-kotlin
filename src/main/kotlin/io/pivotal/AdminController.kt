@@ -14,7 +14,7 @@ class AdminController @Autowired constructor(val userRepository: UserRepository,
     @RequestMapping(value = "/resource/admin/list/", method = arrayOf(RequestMethod.GET))
     fun adminList(principal: Principal): List<Item> {
         val user = userRepository.findByUsername(principal.name)
-        if (user != null && user.isAdmin) {
+        if (user?.isAdmin!!) {
             return itemRepository.findAll().toList()
         } else if (user != null){
             return user.items;
@@ -25,8 +25,8 @@ class AdminController @Autowired constructor(val userRepository: UserRepository,
     @RequestMapping(value = "/resource/admin/userlist/", method = arrayOf(RequestMethod.GET))
     fun userList(principal: Principal): List<String> {
         val user = userRepository.findByUsername(principal.name)
-        var result:MutableList<String> = mutableListOf()
-        if (user != null && user.isAdmin) {
+        val result:MutableList<String> = mutableListOf()
+        if (user?.isAdmin!!) {
             userRepository.findAll().forEach { user -> result.add(user.username)}
         }
         return result
@@ -35,7 +35,7 @@ class AdminController @Autowired constructor(val userRepository: UserRepository,
     @RequestMapping(value = "/resource/user/{username}/", method = arrayOf(RequestMethod.GET))
     fun adminShowUser(principal: Principal, @PathVariable username: String): User? {
         val user = userRepository.findByUsername(principal.name)
-        if (user != null && user.isAdmin) {
+        if (user?.isAdmin!!) {
             return userRepository.findByUsername(username)
         } else {
             return null

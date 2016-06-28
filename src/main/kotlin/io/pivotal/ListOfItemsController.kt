@@ -31,7 +31,7 @@ class ListOfItemsController @Autowired constructor(val itemRepository: ItemRepos
     @RequestMapping(value = "/resource/done/{id}/{done}/", method = arrayOf(RequestMethod.POST))
     fun postDoneUpdate(@PathVariable id: Long, @PathVariable done: String): String {
         val item = itemRepository.findOne(id)
-        if ( done.equals("yes") or done.equals("no")) {
+        if (done.equals("yes") or done.equals("no")) {
             item.done = done
         } else {
             println("Invalid argument to postDoneUpdate:  " + done)
@@ -43,7 +43,7 @@ class ListOfItemsController @Autowired constructor(val itemRepository: ItemRepos
     @RequestMapping(value = "/resource/save/{id}/{title}/{content}/{done}/", method = arrayOf(RequestMethod.POST))
     fun postSaveUpdate(@PathVariable id: Long, @PathVariable title: String, @PathVariable content: String, @PathVariable done: String): String {
         val item = itemRepository.findOne(id)
-        if ( done.equals("yes") or done.equals("no")) {
+        if (done.equals("yes") or done.equals("no")) {
             item.done = done
         } else {
             println("Invalid argument to postSaveUpdate:  " + done)
@@ -58,10 +58,7 @@ class ListOfItemsController @Autowired constructor(val itemRepository: ItemRepos
     fun postCreate(principal: Principal?): Item? {
         val principal2 = fixPrincipalForTest(principal)
         val user = userRepository.findByUsername(principal2.name)
-        if (user != null) {
-            return itemRepository.save(Item(user = user))
-        }
-        return null
+        return itemRepository.save(Item(user = user))
     }
 
     @RequestMapping(value = "/resource/delete/{id}")
@@ -72,7 +69,7 @@ class ListOfItemsController @Autowired constructor(val itemRepository: ItemRepos
 
     private fun fixPrincipalForTest(principal: Principal?): Principal {
         if (principal == null) {
-            var principal2: Principal? = SecurityContextHolder.getContext().authentication
+            val principal2: Principal? = SecurityContextHolder.getContext().authentication
             if (principal2 == null) {
                 println("unauthorized or principal is null")
             }

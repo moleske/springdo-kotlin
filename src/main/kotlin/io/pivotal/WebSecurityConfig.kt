@@ -55,14 +55,12 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
             override fun doFilterInternal(httpServletRequest: HttpServletRequest, httpServletResponse: HttpServletResponse, filterChain: FilterChain) {
                 val csrfToken: CsrfToken? = httpServletRequest.getAttribute(CsrfToken::class.java.name) as CsrfToken
-                if (csrfToken != null) {
-                    var cookie: Cookie? = WebUtils.getCookie(httpServletRequest, "XSRF-TOKEN")
-                    val token = csrfToken.token
-                    if (cookie == null || token != null && token != cookie.value) {
-                        cookie = Cookie("XSRF-TOKEN", token)
-                        cookie.path = "/"  //probably don't want that normally
-                        httpServletResponse.addCookie(cookie)
-                    }
+                var cookie: Cookie? = WebUtils.getCookie(httpServletRequest, "XSRF-TOKEN")
+                val token = csrfToken?.token
+                if (token != cookie?.value) {
+                    cookie = Cookie("XSRF-TOKEN", token)
+                    cookie.path = "/"  //probably don't want that normally
+                    httpServletResponse.addCookie(cookie)
                 }
                 filterChain.doFilter(httpServletRequest, httpServletResponse)
             }
