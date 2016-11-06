@@ -9,8 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
-import org.springframework.test.context.web.WebAppConfiguration
+import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
@@ -20,9 +19,8 @@ import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 
-@RunWith(SpringJUnit4ClassRunner::class)
-@SpringBootTest(classes = arrayOf(SpringdoKotlinApplication::class))
-@WebAppConfiguration
+@RunWith(SpringRunner::class)
+@SpringBootTest
 class AdminControllerTest {
 
     @Autowired lateinit var context: WebApplicationContext

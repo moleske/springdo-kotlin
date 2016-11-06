@@ -1,23 +1,22 @@
 package io.pivotal
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
 import java.security.Principal
 
 @RestController
-class ListOfItemsController @Autowired constructor(val itemRepository: ItemRepository, val userRepository: UserRepository) {
+class ListOfItemsController(val itemRepository: ItemRepository, val userRepository: UserRepository) {
 
-    @RequestMapping(value = "/resource/list/", method = arrayOf(RequestMethod.GET))
+    @GetMapping("/resource/list/")
     fun listOfItems(principal: Principal): MutableIterable<Item>? {
         val user = userRepository.findByUsername(principal.name)
         return itemRepository.findByUser(user)
     }
 
-    @RequestMapping(value = "/resource/dummylist/", method = arrayOf(RequestMethod.GET))
+    @GetMapping("/resource/dummylist/")
     fun listOfDummyItems() = listOf(
             mapOf(
                     "id" to "1",
@@ -28,7 +27,7 @@ class ListOfItemsController @Autowired constructor(val itemRepository: ItemRepos
                     "title" to "Visit farmer's market",
                     "content" to "Buy dairy and eggs at farmers market"))
 
-    @RequestMapping(value = "/resource/done/{id}/{done}/", method = arrayOf(RequestMethod.POST))
+    @PostMapping("/resource/done/{id}/{done}/")
     fun postDoneUpdate(@PathVariable id: Long, @PathVariable done: String): String {
         val item = itemRepository.findOne(id)
         if (done.equals("yes") or done.equals("no")) {
@@ -40,7 +39,7 @@ class ListOfItemsController @Autowired constructor(val itemRepository: ItemRepos
         return "[\"ok\"]"
     }
 
-    @RequestMapping(value = "/resource/save/{id}/{title}/{content}/{done}/", method = arrayOf(RequestMethod.POST))
+    @PostMapping("/resource/save/{id}/{title}/{content}/{done}/")
     fun postSaveUpdate(@PathVariable id: Long, @PathVariable title: String, @PathVariable content: String, @PathVariable done: String): String {
         val item = itemRepository.findOne(id)
         if (done.equals("yes") or done.equals("no")) {
@@ -54,14 +53,14 @@ class ListOfItemsController @Autowired constructor(val itemRepository: ItemRepos
         return "[\"ok\"]"
     }
 
-    @RequestMapping(value = "/resource/create/", method = arrayOf(RequestMethod.POST))
+    @PostMapping("/resource/create/")
     fun postCreate(principal: Principal?): Item? {
         val principal2 = fixPrincipalForTest(principal)
         val user = userRepository.findByUsername(principal2.name)
         return itemRepository.save(Item(user = user))
     }
 
-    @RequestMapping(value = "/resource/delete/{id}")
+    @PostMapping("/resource/delete/{id}")
     fun deleteItem(@PathVariable id: Long): String {
         itemRepository.delete(id)
         return "[\"ok\"]"

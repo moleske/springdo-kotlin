@@ -1,9 +1,9 @@
 package io.pivotal
 
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.GetMapping
 
 class HelloController {
 
-    @RequestMapping("/resource/hello")
+    @GetMapping("/resource/hello")
     fun hello() = mapOf("id" to "1", "content" to "Go swimming on Monday night")
 }
