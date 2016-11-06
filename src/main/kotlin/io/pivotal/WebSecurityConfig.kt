@@ -36,6 +36,7 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 .logout().permitAll()
                 .and()
                 .csrf()
+//                .disable();
                 .csrfTokenRepository(csrfTokenRepository())
                 .and()
                 .addFilterAfter(csrfHeaderFilter(), CsrfFilter::class.java)
