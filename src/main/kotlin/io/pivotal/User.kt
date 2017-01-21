@@ -7,9 +7,9 @@ import javax.persistence.*
 
 @Entity
 data class User(
-        internal var username: String = "",
-        internal var password: String? = null,
-        var email: String = "",
+        internal var username: String,
+        internal var password: String?,
+        var email: String,
         @JsonIgnore @OneToMany(mappedBy = "user") var items: List<Item> = mutableListOf(),
         var isAdmin: Boolean = false,
         @Id @GeneratedValue(strategy = GenerationType.AUTO) var id: Long = 0L

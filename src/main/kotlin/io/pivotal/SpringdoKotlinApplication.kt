@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 
 @SpringBootApplication
-open class SpringdoKotlinApplication : CommandLineRunner {
+class SpringdoKotlinApplication : CommandLineRunner {
     @Autowired lateinit var userRepository: UserRepository
     @Autowired lateinit var itemRepository: ItemRepository
 

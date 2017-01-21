@@ -1,7 +1,7 @@
 buildscript {
 	ext {
-		springBootVersion = '1.4.1.RELEASE'
-		kotlinVersion = '1.0.4'
+		springBootVersion = '1.4.3.RELEASE'
+		kotlinVersion = '1.0.6'
 	}
 	repositories {
 		mavenCentral()
@@ -9,11 +9,15 @@ buildscript {
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") 
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
+		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+		classpath("org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}")
 	}
 }
 
 apply plugin: 'kotlin'
-apply plugin: 'spring-boot'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'kotlin-spring'
+apply plugin: 'kotlin-jpa'
 
 jar {
 	baseName = 'springdo-kotlin'
@@ -33,5 +37,5 @@ dependencies {
 	runtime('org.hsqldb:hsqldb')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.security:spring-security-test')
-	testCompile('com.jayway.jsonpath:json-path:2.2.0')
+	testCompile('com.jayway.jsonpath:json-path')
 }

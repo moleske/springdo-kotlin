@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse
 
 @Configuration
 @EnableWebSecurity
-open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
+class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
@@ -47,7 +47,7 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     }
 
     @Bean
-    open fun myUserManager(): UserManager {
+    fun myUserManager(): UserManager {
         return UserManager()
     }
 
