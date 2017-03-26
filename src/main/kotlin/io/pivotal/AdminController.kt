@@ -14,10 +14,9 @@ class AdminController(val userRepository: UserRepository, val itemRepository: It
         val user = userRepository.findByUsername(principal.name)
         if (user?.isAdmin!!) {
             return itemRepository.findAll().toList()
-        } else if (user != null) {
+        } else {
             return user.items
         }
-        return emptyList()
     }
 
     @GetMapping("/resource/admin/userlist/")
