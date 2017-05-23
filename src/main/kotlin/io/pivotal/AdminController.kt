@@ -24,7 +24,7 @@ class AdminController(val userRepository: UserRepository, val itemRepository: It
         val user = userRepository.findByUsername(principal.name)
         val result: MutableList<String> = mutableListOf()
         if (user?.isAdmin!!) {
-            userRepository.findAll().forEach { user -> result.add(user.username) }
+            userRepository.findAll().forEach { result.add(it.username) }
         }
         return result
     }

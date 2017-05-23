@@ -30,7 +30,7 @@ class ListOfItemsController(val itemRepository: ItemRepository, val userReposito
     @PostMapping("/resource/done/{id}/{done}/")
     fun postDoneUpdate(@PathVariable id: Long, @PathVariable done: String): String {
         val item = itemRepository.findOne(id)
-        if (done.equals("yes") or done.equals("no")) {
+        if ((done == "yes") or (done == "no")) {
             item.done = done
         } else {
             println("Invalid argument to postDoneUpdate:  " + done)
@@ -42,7 +42,7 @@ class ListOfItemsController(val itemRepository: ItemRepository, val userReposito
     @PostMapping("/resource/save/{id}/{title}/{content}/{done}/")
     fun postSaveUpdate(@PathVariable id: Long, @PathVariable title: String, @PathVariable content: String, @PathVariable done: String): String {
         val item = itemRepository.findOne(id)
-        if (done.equals("yes") or done.equals("no")) {
+        if ((done == "yes") or (done == "no")) {
             item.done = done
         } else {
             println("Invalid argument to postSaveUpdate:  " + done)
